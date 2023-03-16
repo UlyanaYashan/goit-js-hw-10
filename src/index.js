@@ -1,6 +1,6 @@
 import './css/styles.css';
 
-const DEBOUNCE_DELAY = 300;
+const DEBOUNCE_DELAY = 800;
 import './css/styles.css';
 
 import { fetchCountries } from './api/fetchCountries';
@@ -21,7 +21,7 @@ function onInput(e) {
     const name = input.value.trim()
     // console.log(name);
 
-    if (name === '') {
+    if (!name) {
         return (countryList.innerHTML = ''), (countryInfo.innerHTML = '')
       }
     
@@ -32,12 +32,20 @@ function onInput(e) {
         countryList.innerHTML = ''
         countryInfo.innerHTML = ''
         if (country.length === 1) {
-          countryList.insertAdjacentHTML('beforeend', createCountryList(country))
-          countryInfo.insertAdjacentHTML('beforeend', createCountryInfo(country))
-        } else if (country.length >= 10) {
+          countryList.innerHTML = ''
+          countryInfo.insertAdjacentHTML('beforeend', createCountryInfo(country));
+          input.value = '';
+        } 
+        if (country.length > 10) {
+          countryList.innerHTML = ''
+          countryInfo.innerHTML = ''
             Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
-        } else {
-          countryList.insertAdjacentHTML('beforeend', createCountryList(country))
+        } 
+        if (country.length >= 2 && country.length <= 10)
+         {
+          countryInfo.innerHTML = '';
+          countryList.insertAdjacentHTML('beforeend', createCountryList(country));
+          input.value = '';
         }
 
         const listItem = document.querySelectorAll('.country-list__item')
@@ -47,11 +55,7 @@ function onInput(e) {
 
       })
       .catch(onFetchError)
-      .finally(()  => {
-        // console.log(input.value);
-        input.value = '';
-        }
-            )
+      
   }
    
     
@@ -72,9 +76,14 @@ return markup;;
 
 function createCountryInfo(сountry) {
     const markup = сountry
-      .map(({ capital, population, languages }) => {
+      .map(({name, flags, capital, population, languages }) => {
         return `
         <ul class="country-info__list">
+        <li class="country-list__item">
+        <li class="country-list__item">
+    <img class="country-list__flag" src="${flags.svg}" alt="Flag of ${name.official}" width = 30px height = 30px>
+    <h2 class="country-list__name">${name.official}</h2>
+</li>
         <li class="country-info__item"><p><b>Capital: </b>${capital}</p></li>
         <li class="country-info__item"><p><b>Population: </b>${population}</p></li>
         <li class="country-info__item"><p><b>Languages: </b>${Object.values(languages).join(', ')}</p></li>
@@ -87,5 +96,9 @@ function createCountryInfo(сountry) {
   
 
 function onFetchError () {
+  
     Notiflix.Notify.failure('Oops, there is no country with that name');
+    input.value = '';
+        countryList.innerHTML = ''
+        countryInfo.innerHTML = ''
 }
