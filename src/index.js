@@ -34,7 +34,7 @@ function onInput(e) {
         if (country.length === 1) {
           countryList.innerHTML = ''
           countryInfo.insertAdjacentHTML('beforeend', createCountryInfo(country));
-          input.value = '';
+          
         } 
         if (country.length > 10) {
           countryList.innerHTML = ''
@@ -45,7 +45,7 @@ function onInput(e) {
          {
           countryInfo.innerHTML = '';
           countryList.insertAdjacentHTML('beforeend', createCountryList(country));
-          input.value = '';
+         
         }
 
         const listItem = document.querySelectorAll('.country-list__item')
@@ -98,7 +98,7 @@ function createCountryInfo(сountry) {
 function onFetchError () {
   
     Notiflix.Notify.failure('Oops, there is no country with that name');
-    input.value = '';
+    
         countryList.innerHTML = ''
         countryInfo.innerHTML = ''
 }
